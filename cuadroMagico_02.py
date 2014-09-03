@@ -166,10 +166,14 @@ def construirCandidatos(cuadrado,numero):
 	finalList    = []
 	posx=(numero/tamanioCuadroMagico)
 	posy=(numero%tamanioCuadroMagico)
+	isColumnaMagica=False
 	#print("X =%d"%posx)
 	#print("Y = %d"%posy)
 	columnasFaltantes=(tamanioCuadroMagico-posy)
 	#imprimirCuadro(cuadrado)
+	if(posy==0 and x > tamanioCuadroMagico/2):
+		#print "Estoy en una primera columna "
+		isColumnaMagica=True
 	sumaActual=0
 	for i in range(tamanioCuadroMagico):
 		#print cuadroMagico[posx][i]
@@ -208,6 +212,25 @@ def construirCandidatos(cuadrado,numero):
 		#	print x
 		#	if((x[0] in alternateList)):
 		#		alternateList.remove(x[0])
+	if(isColumnaMagica):
+		#print "validando columna y me faltan %d"%(tamanioCuadroMagico-posx)
+		sumaPorColumna=0
+		parcialList = finalList
+		finalList = []
+		for i in range(tamanioCuadroMagico):
+			#print cuadroMagico[i][posy]
+			sumaPorColumna =sumaPorColumna + cuadroMagico[i][posy]
+		for x in itertools.combinations(parcialList,(tamanioCuadroMagico-posx)):
+			#print x
+			sumParcial = 0
+			sumParcial =sumParcial +  sumaPorColumna
+			for y in x:
+				sumParcial = sumParcial + y
+			if(sumParcial==numeroMagico):
+				for y in x:
+					if(y not in finalList):
+						finalList.append(y)
+			
 				
 	return finalList
 
@@ -232,7 +255,7 @@ def construirCandidatos(cuadrado,numero):
 #################################################################################
 
 def backTrack(numero,cuadrado,numFila,numColumna):
-	imprimirCuadro(cuadrado)
+	#imprimirCuadro(cuadrado)
 	#print "numero %d"%numero
 	#print "Fila %d"%(tamanioMaximo-tamanioCuadroMagico)
 	if(numero>(tamanioMaximo-tamanioCuadroMagico)):
@@ -277,7 +300,7 @@ def backTrack(numero,cuadrado,numFila,numColumna):
 
 
 
-tamanioCuadroMagico=4
+tamanioCuadroMagico=5
 numeroMagico= tamanioCuadroMagico*(tamanioCuadroMagico*tamanioCuadroMagico+1)/2
 numeroSoluciones=0
 tamanioMaximo = tamanioCuadroMagico * tamanioCuadroMagico
@@ -296,15 +319,18 @@ cuadroMagico = [[0 for x in xrange(tamanioCuadroMagico)] for x in xrange(tamanio
 #cuadroMagico[2][2]=2
 
 
-#cuadroMagico[0][0]=7
-#cuadroMagico[0][1]=5
-#cuadroMagico[0][2]=3
-#cuadroMagico[1][0]=6
-#cuadroMagico[1][1]=1
-#cuadroMagico[1][2]=7
-#cuadroMagico[2][0]=4
-#cuadroMagico[2][1]=9
-#cuadroMagico[2][2]=2
+#cuadroMagico[0][0]=1
+#cuadroMagico[0][1]=2
+#cuadroMagico[0][2]=15
+#cuadroMagico[0][3]=16
+#cuadroMagico[1][0]=3
+#cuadroMagico[1][1]=4
+#cuadroMagico[1][2]=13
+#cuadroMagico[1][3]=14
+#cuadroMagico[2][0]=5
+#cuadroMagico[2][1]=6
+#cuadroMagico[2][2]=11
+#cuadroMagico[2][3]=12
 
 
 
@@ -316,7 +342,7 @@ print("--- Total de segundos %s  ---" % (time.time() - start_time))
 print("Numero total de soluciones encontradas %d" % numeroSoluciones)
 print("Numero total de cuadros construidos %d"%numeroTotaldeCuadros)
 #print "IS cuadro Magico %d" % verificarCuadroMagico(cuadroMagico)
-#print construirCandidatos(cuadroMagico,4)
+#print construirCandidatos(cuadroMagico,5)
 #imprimirCuadro(cuadroMagico)
 #rotated =  zip(*cuadroMagico[::-1])
 #imprimirCuadro(rotated)
