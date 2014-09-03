@@ -45,7 +45,7 @@ def imprimirCuadro(cuadrado):
 	print("--------> imprimirCuadro")
 	for i in range(tamanioCuadroMagico):
 		for j in range(tamanioCuadroMagico):
-			print cuadrado[i][j],
+			print "\t",cuadrado[i][j],
 		print " "
 	print("<------- imprimirCuadro")
 
@@ -110,12 +110,39 @@ def verificaFilaMagica(cuadrado,numFila):
 	sumaPorFila=0
 	isFilaMagica = True 
 	for i in range(tamanioCuadroMagico):
+
 		sumaPorFila= sumaPorFila + cuadrado[numFila-1][i]
 
 	if (sumaPorFila!=numeroMagico):
 		isFilaMagica=False
 
 	return isFilaMagica
+
+############################################################################
+#Nom de la funcion       : verificaColumnaMagica 
+#Version                 : 1.00 
+#Descripcion             : Verifica una Columna  con el numero magico
+#Autor                   : HGT 
+#
+#Documentacion Params    : 
+#
+#Tipo          Nombre                          Descripcion 
+#=========     ======================          ============================= 
+# Arreglo      cuadrado                        Arreglo bidimensional
+# Integer      numFila 						   Numero de fila a verificar 
+############################################################################
+def verificaColumnaMagica(cuadrado,numero):
+	sumaPorColumna=0
+	isColumnaMagica = True 
+	numColumna=(numero%tamanioCuadroMagico)
+	for i in range(tamanioCuadroMagico):
+		#print cuadrado[i][numColumna]
+		sumaPorColumna= sumaPorColumna + cuadrado[i][numColumna]
+
+	if (sumaPorColumna!=numeroMagico):
+		isColumnaMagica=False
+
+	return isColumnaMagica
 
 ############################################################################
 #Nom de la funcion       : construirCandidatos 
@@ -171,7 +198,7 @@ def construirCandidatos(cuadrado,numero):
 		sumParcial =sumParcial +  sumaActual
 		for y in x:
 			sumParcial = sumParcial + y
-		if(sumParcial>=numeroMagico):
+		if(sumParcial==numeroMagico):
 			
 			for y in x:
 				if(y not in finalList):
@@ -204,22 +231,36 @@ def construirCandidatos(cuadrado,numero):
 # int          numFila 						   Fila actual del cuadro
 #################################################################################
 
-def backTrack(numero,cuadrado,numFila):
-	#imprimirCuadro(cuadrado)
+def backTrack(numero,cuadrado,numFila,numColumna):
+	imprimirCuadro(cuadrado)
+	#print "numero %d"%numero
+	#print "Fila %d"%(tamanioMaximo-tamanioCuadroMagico)
+	if(numero>(tamanioMaximo-tamanioCuadroMagico)):
+		#print "Validar aqui"
+		columnCandidata = verificaColumnaMagica(cuadrado,0)
+		if(columnCandidata!=1):
+			return None
+		
 	if(numero==(tamanioCuadroMagico*numFila)):
 		filaCandidata=verificaFilaMagica(cuadrado,numFila)
 		if(filaCandidata!=1):
 			return None
+		else:
+			numColumna = numColumna + 1
+			#print "numColumna %d"%numColumna
 	if(numero==tamanioMaximo):
-		
 		global numeroTotaldeCuadros
 		numeroTotaldeCuadros +=1
 		if(verificarCuadroMagico(cuadrado)):
-			print("Es solucion")
+			
 			global numeroSoluciones 
 			numeroSoluciones+=1
+			print("---Parcial de Segundos %s  ---" % (time.time() - start_time))
+			print("Numero Parcial de soluciones encontradas %d" % numeroSoluciones)
+			print("Numero Parcial de cuadros construidos %d"%numeroTotaldeCuadros)
 			imprimirCuadro(cuadrado)
 			sys.exit(0)
+			
 	else:
 		candidatosList=construirCandidatos(cuadrado,numero)
 		for i in range(len(candidatosList)):
@@ -227,7 +268,7 @@ def backTrack(numero,cuadrado,numFila):
 				posx=(numero/tamanioCuadroMagico)
 				posy=(numero%tamanioCuadroMagico)
 				cuadrado[posx][posy]=candidatosList[i]
-				backTrack(numero+1,cuadrado,numFila)
+				backTrack(numero+1,cuadrado,numFila,numColumna)
 				cuadrado[posx][posy]=0
 	return None
 
@@ -236,7 +277,7 @@ def backTrack(numero,cuadrado,numFila):
 
 
 
-tamanioCuadroMagico=3
+tamanioCuadroMagico=4
 numeroMagico= tamanioCuadroMagico*(tamanioCuadroMagico*tamanioCuadroMagico+1)/2
 numeroSoluciones=0
 tamanioMaximo = tamanioCuadroMagico * tamanioCuadroMagico
@@ -244,15 +285,15 @@ debugEnable=False
 print "Numero Magico %d " % numeroMagico 
 cuadroMagico = [[0 for x in xrange(tamanioCuadroMagico)] for x in xrange(tamanioCuadroMagico)] 
 
-cuadroMagico[0][0]=8
-cuadroMagico[0][1]=1
-cuadroMagico[0][2]=6
-cuadroMagico[1][0]=3
-cuadroMagico[1][1]=5
-cuadroMagico[1][2]=7
-cuadroMagico[2][0]=4
-cuadroMagico[2][1]=9
-cuadroMagico[2][2]=2
+#cuadroMagico[0][0]=1
+#cuadroMagico[0][1]=5
+#cuadroMagico[0][2]=9
+#cuadroMagico[1][0]=2
+#cuadroMagico[1][1]=7
+#cuadroMagico[1][2]=6
+#cuadroMagico[2][0]=12
+#cuadroMagico[2][1]=9
+#cuadroMagico[2][2]=2
 
 
 #cuadroMagico[0][0]=7
@@ -268,13 +309,14 @@ cuadroMagico[2][2]=2
 
 
 #imprimirCuadro(cuadroMagico)
-#start_time = time.time()
-#backTrack(0,cuadroMagico,1)
-#print("--- %s seconds ---" % (time.time() - start_time))
-#print("Numero de soluciones encontradas %d" % numeroSoluciones)
-#print("Numero total de cuadros construidos %d"%numeroTotaldeCuadros)
+#print verificaColumnaMagica(cuadroMagico,6)
+start_time = time.time()
+backTrack(0,cuadroMagico,1,0)
+print("--- Total de segundos %s  ---" % (time.time() - start_time))
+print("Numero total de soluciones encontradas %d" % numeroSoluciones)
+print("Numero total de cuadros construidos %d"%numeroTotaldeCuadros)
 #print "IS cuadro Magico %d" % verificarCuadroMagico(cuadroMagico)
 #print construirCandidatos(cuadroMagico,4)
-imprimirCuadro(cuadroMagico)
-rotated =  zip(*cuadroMagico[::-1])
-imprimirCuadro(rotated)
+#imprimirCuadro(cuadroMagico)
+#rotated =  zip(*cuadroMagico[::-1])
+#imprimirCuadro(rotated)
