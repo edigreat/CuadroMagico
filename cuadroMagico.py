@@ -1,12 +1,6 @@
 ############################################################
 #Identificacion          : cuadroMagico.py
 #Version                 : 1.00
-#Nombre del posgrado     : Maestria en Ciencia e Ingenieria
-#Nombre de la materia    : Programacion Avanzada
-#Nombre del Profesor     : M. en C. Gustavo Marquez
-#Descripcion             : Tarea 1 Cuadro Magico
-#Autor                   : Heriberto Galdamez Torija
-#                          
 #Instalacion             : Python 2.7 Requerido
 #Fecha de Entrega        : Septiempre-2014
  
